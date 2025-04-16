@@ -16,6 +16,12 @@ exports.createProduct=async(req,res,next)=>{
 
 exports.getAllProducts=async(req,res)=>{
     const products=await Product.find();
+    if(!products){
+        return res.status(400).json({
+            success:false,
+            message:"No products found"
+        })
+    }
     res.status(200).json({
         sucess:true,
         products
