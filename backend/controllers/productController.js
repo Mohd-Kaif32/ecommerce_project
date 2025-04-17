@@ -1,10 +1,10 @@
 const Product=require("../models/productModels");
 const ErrorHandler = require("../utils/errorhandler");
+const catchAsyncErrors = require("../middleware/catchAsyncErrors");
+const ApiFeatures = require("../utils/apiFeatures");
 
 
-
-
-exports.createProduct=async(req,res,next)=>{
+exports.createProduct=catchAsyncErrors(async(req,res,next)=>{
 
     const product=await Product.create(req.body);
 
@@ -12,24 +12,30 @@ exports.createProduct=async(req,res,next)=>{
         success:true,
         product
     })
-}
+})
 
-exports.getAllProducts=async(req,res)=>{
-    const products=await Product.find();
-    if(!products){
-        return res.status(400).json({
-            success:false,
-            message:"No products found"
-        })
-    }
+exports.getAllProducts=catchAsyncErrors(async(req,res)=>{
+
+
+    const ApiFeature=new ApiFeatures(Product.find(),req.query).search().filter();
+    // const products=await apiFeatures.query;
+
+
+    const products=await ApiFeature.query;
+    // if(!products){
+    //     return res.status(400).json({
+    //         success:false,
+    //         message:"No products found"
+    //     })
+    // }
     res.status(200).json({
         sucess:true,
         products
     })
-}
+})
 
 
-exports.updateProduct=async(req,res)=>{
+exports.updateProduct=catchAsyncErrors(async(req,res)=>{
     let product =await  Product.findById(req.params.id);
     if(!product){
         return res.status(500).json({
@@ -46,9 +52,9 @@ exports.updateProduct=async(req,res)=>{
         success:true,
         product
     })
-}
+})
 
-exports.deleteProdut=async(req,res)=>{
+exports.deleteProdut=catchAsyncErrors(async(req,res)=>{
     const product=await Product.findById(req.params.id);
     if(!product){
         return res.status(500).json({
@@ -61,9 +67,9 @@ exports.deleteProdut=async(req,res)=>{
         success:true,
         message:"Product deleted successfully"
     })
-}
+})
 
-exports.getProductDetails=async(req,res,next)=>{
+exports.getProductDetails=catchAsyncErrors(async(req,res,next)=>{
     const product=await Product.findById(req.params.id);
 
     if(!product){
@@ -78,6 +84,6 @@ exports.getProductDetails=async(req,res,next)=>{
         success:true,
         product
     })
-}
+})
 
 
