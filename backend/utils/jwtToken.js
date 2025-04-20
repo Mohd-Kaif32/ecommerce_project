@@ -7,11 +7,12 @@ const sendToken=(user,statusCode,res)=>{
         ),
         httpOnly:true,
     }
-    console.log(token)
-    res.status(statusCode).setCookie("token",token,options).json({
+    // console.log(token)
+    res.status(statusCode).cookie("token",token,options).json({
         sucsess:true,
         user,
-        token
+        token,
+        message:"Logged in"
     })
 };
 module.exports=sendToken;
